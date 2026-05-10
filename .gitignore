@@ -1,0 +1,18 @@
+# Rust build output
+target/
+
+# wasm-pack outputs (rebuilt from source via `npm run build`; the npm
+# tarball ships them, but they don't belong in git history)
+pkg/
+pkg-web/
+pkg-node/
+
+# Node
+node_modules/
+
+# Tarballs
+*.tgz
+
+# OS / editor cruft
+.DS_Store
+*.swp

@@ -1,0 +1,40 @@
+{
+  "name": "@dtelecom/vodozemac-wasm",
+  "version": "0.1.0",
+  "description": "Browser/Node WASM bindings for vodozemac (Olm primitives), tailored for non-Matrix chat use.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dTelecom/vodozemac-wasm"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "node": {
+        "types": "./pkg-node/dtelecom_vodozemac_wasm.d.ts",
+        "default": "./pkg-node/dtelecom_vodozemac_wasm.js"
+      },
+      "browser": {
+        "types": "./pkg-web/dtelecom_vodozemac_wasm.d.ts",
+        "default": "./pkg-web/dtelecom_vodozemac_wasm.js"
+      },
+      "default": {
+        "types": "./pkg-web/dtelecom_vodozemac_wasm.d.ts",
+        "default": "./pkg-web/dtelecom_vodozemac_wasm.js"
+      }
+    }
+  },
+  "files": [
+    "pkg-web",
+    "pkg-node",
+    "src",
+    "Cargo.toml",
+    "README.md"
+  ],
+  "scripts": {
+    "build:web": "wasm-pack build --target web --release --out-dir pkg-web",
+    "build:node": "wasm-pack build --target nodejs --release --out-dir pkg-node",
+    "build": "npm run build:web && npm run build:node",
+    "clean": "rm -rf pkg pkg-web pkg-node target"
+  }
+}
