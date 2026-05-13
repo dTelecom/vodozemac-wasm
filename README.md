@@ -1,6 +1,6 @@
 # @dtelecom/vodozemac-wasm
 
-Browser + Node WASM bindings for [vodozemac](https://github.com/matrix-org/vodozemac), exposing only the Olm primitives needed for non-Matrix 1:1 chat protocols. No Matrix-specific types, no protocol assumptions about user/device id shape.
+Browser + Node + React Native WASM bindings for [vodozemac](https://github.com/matrix-org/vodozemac), exposing only the Olm primitives needed for non-Matrix 1:1 chat protocols. No Matrix-specific types, no protocol assumptions about user/device id shape.
 
 Built from a small Rust crate that wraps `vodozemac` via `wasm-bindgen`. Same wire format as libolm (Olm v1), so existing libolm-pickled state is migration-friendly via the standalone `vodozemac::olm::libolm_compat` path (not exposed in v0.1.0 — add when needed).
 
@@ -12,7 +12,11 @@ Built from a small Rust crate that wraps `vodozemac` via `wasm-bindgen`. Same wi
 
 ```ts
 import init, { Account, Session, InboundResult } from "@dtelecom/vodozemac-wasm";
-// In Node (test runner) the `init` is a no-op; in the browser it loads the WASM.
+// Node loads WASM synchronously at module import — `init()` is a no-op.
+// Browser fetches the .wasm asset on first init().
+// React Native (Hermes V1 / RN 0.84+) decodes the embedded base64 on first init().
+// Same call site in all three; the conditional package exports route to the
+// right loader automatically.
 await init();
 
 const a = new Account();
@@ -45,19 +49,19 @@ const restored2 = Session.fromPickle(sp);
 Requires Rust 1.85+ (edition 2024) and `wasm-pack`.
 
 ```sh
-npm run build       # both web + node targets
+npm run build       # all three targets
 npm run build:web   # browser bundlers (vite, webpack)
 npm run build:node  # Node test runners
+npm run build:rn    # React Native (Hermes V1 / RN 0.84+) — derives from pkg-web; no Rust rebuild
 ```
 
 Output:
 - `pkg-web/` — ESM, browser-targeted; calls `init(url)` to load `.wasm` via fetch
 - `pkg-node/` — CommonJS-like, Node-targeted; loads `.wasm` synchronously via `fs`
+- `pkg-rn/` — ESM, React Native-targeted (Hermes V1 / RN 0.84+); WASM bytes are base64-embedded into the JS bundle so Metro doesn't need to ship them as a separate asset. The browser glue is reused with `__wbg_init` and `__wbg_load` stripped (those depend on `import.meta.url` + `fetch` which Metro can't resolve to a real `.wasm` asset). Caller calls the default async `init()` once; subsequent calls are no-ops.
 
-Bundle size: ~400 KB unoptimized, ~150 KB gzipped (vs libolm's ~750 KB unoptimized).
+Bundle size: ~400 KB raw WASM, ~150 KB gzipped (vs libolm's ~750 KB unoptimized). The RN target adds ~520 KB of base64 string for the WASM bytes — measurable but acceptable for an RN bundle.
 
 ## Status
 
-v0.1.0 — supports the Olm primitives needed by `@dtelecom/secure-chat-client`. Megolm (group sessions), libolm-pickle migration, SAS verification not yet bound. Add when a consumer needs them.
-
-React Native (iOS/Android) bindings via UniFFI — planned for the same Rust crate. Not in v0.1.0.
+v0.2.0 — adds the React Native target (`pkg-rn/`). Same Olm primitives as v0.1.0, no API or wire-format changes from the consumer's POV. Megolm (group sessions), libolm-pickle migration, and SAS verification still not bound — add when a consumer needs them.

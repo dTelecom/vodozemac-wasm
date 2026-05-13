@@ -6,6 +6,7 @@ target/
 pkg/
 pkg-web/
 pkg-node/
+pkg-rn/
 
 # Node
 node_modules/
