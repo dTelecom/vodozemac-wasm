@@ -16,7 +16,17 @@
 
 #import <Foundation/Foundation.h>
 #import <RTNVodozemacSpec/RTNVodozemacSpec.h>
+// Pod can be built as a framework (CocoaPods `use_frameworks!`) — common
+// in any RN app that has Swift deps — or as a static library (CocoaPods
+// default). The Xcode-generated Swift interop header lives at
+//   <Vodozemac/Vodozemac-Swift.h>   when built as a framework
+//   "Vodozemac-Swift.h"             when built as a static lib
+// Support both so we work regardless of the consumer's linkage choice.
+#if __has_include(<Vodozemac/Vodozemac-Swift.h>)
+#import <Vodozemac/Vodozemac-Swift.h>
+#else
 #import "Vodozemac-Swift.h"
+#endif
 
 @interface Vodozemac : NSObject <NativeVodozemacSpec>
 @end

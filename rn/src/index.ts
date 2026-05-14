@@ -40,14 +40,26 @@ const sessionFinalizer = makeRegistry(Native.sessionClose);
 export class Account {
   private handle: number | null;
 
-  private constructor(handle: number) {
-    this.handle = handle;
-    accountFinalizer?.register(this, handle, this);
+  /**
+   * Mirrors `@dtelecom/vodozemac-wasm`'s pkg-web shape: `new Account()`
+   * allocates a fresh native account (wasm-bindgen exposes Rust's
+   * `pub fn new() -> Account` as the JS constructor, so consumers like
+   * `@dtelecom/secure-chat-client` use this form directly). When a
+   * `handle` is passed explicitly the wrapper is built around an
+   * existing native handle — internal call sites in `createOutbound-
+   * Session` / `Session.takeSession` / `Account.fromPickle` use that path.
+   */
+  constructor(handle?: number) {
+    const resolved =
+      typeof handle === "number" ? handle : Native.accountNew();
+    this.handle = resolved;
+    accountFinalizer?.register(this, resolved, this);
   }
 
-  /** Create a fresh account with a new identity key. */
+  /** Create a fresh account with a new identity key. Sugar for
+   *  `new Account()` — kept for symmetry with `Session.fromPickle()` etc. */
   static new(): Account {
-    return new Account(Native.accountNew());
+    return new Account();
   }
 
   /** Restore from a JSON pickle produced by {@link pickle}. */

@@ -1,6 +1,6 @@
 {
   "name": "@dtelecom/vodozemac-rn",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Native bindings for vodozemac (Olm primitives) via UniFFI-generated Swift + Kotlin. Drop-in replacement for @dtelecom/vodozemac-wasm on the RN target — same JS surface, same JSON shapes.",
   "license": "Apache-2.0",
   "main": "lib/commonjs/index.js",
