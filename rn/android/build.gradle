@@ -1,0 +1,89 @@
+// Android library module for @dtelecom/vodozemac-rn. Wraps the vendored
+// `libs/vodozemac.aar` (built by the parent repo's android/build_aar.sh)
+// with the React Native TurboModule glue in Kotlin.
+//
+// Pattern: standard React Native module gradle file, adapted to depend on
+// a local AAR + apply codegen for the new architecture.
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.7.3"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21"
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "org.jetbrains.kotlin.android"
+
+// Triggers RN's codegen for this library — generates NativeVodozemacSpec
+// (Kotlin) + RNVodozemacSpec.h (Obj-C++) from src/NativeVodozemac.ts.
+// Required to satisfy the `: NativeVodozemacSpec(...)` superclass in
+// VodozemacModule.kt at compile time.
+apply plugin: "com.facebook.react"
+
+react {
+    // Path to the TS spec source, relative to this build.gradle.
+    jsRootDir = file("../src/")
+    // Package name for the generated Kotlin spec. Must match the import
+    // path used by VodozemacModule.kt (and by package.json's codegenConfig).
+    codegenJavaPackageName = "com.dtelecom.vodozemac"
+}
+
+android {
+    namespace "com.dtelecom.vodozemac.rn"
+    compileSdk 35
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 35
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    // No manual sourceSets override: the `com.facebook.react` plugin
+    // adds the codegen output dir (build/generated/source/codegen/java)
+    // to the main sourceSet automatically.
+
+    packagingOptions {
+        // The .so files in src/main/jniLibs already match the consumer
+        // app's expected ABI layout — no need to re-strip at packaging.
+        jniLibs.useLegacyPackaging = false
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    // React Native — provided by the host app. `+` resolves to whatever
+    // version the host has installed.
+    implementation "com.facebook.react:react-android:+"
+
+    // JNA — the UniFFI Kotlin bindings (src/main/java/.../vodozemac.kt)
+    // call `Native.register(...)` on it to load the .so at runtime.
+    implementation "net.java.dev.jna:jna:5.14.0@aar"
+
+    // Note: the UniFFI Rust crate is shipped inline rather than as a
+    // separate AAR. The Kotlin bindings live in
+    // src/main/java/com/dtelecom/vodozemac/vodozemac.kt and the per-ABI
+    // .so files live under src/main/jniLibs/<abi>/. Local AARs don't
+    // resolve through to a consumer app's classpath; inlining is the
+    // simplest reliable shape.
+}

@@ -1,0 +1,12 @@
+# UniFFI binding-generator configuration. Consumed by `uniffi-bindgen
+# generate ...` at the iOS / Android build step.
+
+[bindings.swift]
+# Swift module name used in Package.swift / podspec / `import VodozemacFFI`.
+module_name = "VodozemacFFI"
+# Generate `Foo.swift` for each scaffolding header rather than one big file.
+generate_module_map = true
+
+[bindings.kotlin]
+# Kotlin package for `com.dtelecom.vodozemac.Account` etc.
+package_name = "com.dtelecom.vodozemac"

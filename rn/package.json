@@ -1,0 +1,72 @@
+{
+  "name": "@dtelecom/vodozemac-rn",
+  "version": "0.1.0",
+  "description": "React Native bindings for vodozemac (Olm primitives) via UniFFI-generated Swift + Kotlin. Drop-in replacement for @dtelecom/vodozemac-wasm on the RN target — same JS surface, same JSON shapes.",
+  "license": "Apache-2.0",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "src",
+    "lib",
+    "ios",
+    "android/src",
+    "android/build.gradle",
+    "Vodozemac.podspec",
+    "react-native.config.js",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bob build",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "olm",
+    "vodozemac",
+    "e2ee",
+    "crypto",
+    "turbomodule"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dTelecom/vodozemac-wasm"
+  },
+  "homepage": "https://github.com/dTelecom/vodozemac-wasm",
+  "author": "dTelecom <dev@dtelecom.org>",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": ">=0.76.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "19.2.3",
+    "react-native": "0.84.1",
+    "react-native-builder-bob": "^0.36.0",
+    "typescript": "^5.7.0"
+  },
+  "codegenConfig": {
+    "name": "RTNVodozemacSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.dtelecom.vodozemac"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      ["typescript", { "project": "tsconfig.build.json" }]
+    ]
+  }
+}

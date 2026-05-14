@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Empty manifest — the package's namespace is supplied by build.gradle's
+  `android.namespace`. No permissions or components needed; vodozemac is
+  pure-computation crypto.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />

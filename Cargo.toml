@@ -22,3 +22,9 @@ getrandom = { version = "0.2", features = ["js"] }
 [profile.release]
 opt-level = "s"
 lto = true
+
+# Workspace — the root crate above remains the wasm-bindgen target for
+# pkg-web / pkg-node. The new member is the UniFFI-based crate that powers
+# the React Native native bridge (iOS xcframework + Android AAR).
+[workspace]
+members = ["crates/vodozemac-ffi"]

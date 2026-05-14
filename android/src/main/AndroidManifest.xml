@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Empty manifest for the AAR. The namespace is supplied by build.gradle.kts
+  (`android.namespace`), so we don't need the `package` attribute here.
+  No permissions, components, or features are required — vodozemac is a
+  pure-computation crypto library.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />

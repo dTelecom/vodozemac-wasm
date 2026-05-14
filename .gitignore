@@ -6,13 +6,34 @@ target/
 pkg/
 pkg-web/
 pkg-node/
-pkg-rn/
 
 # Node
 node_modules/
 
 # Tarballs
 *.tgz
+
+# Gradle / Android build scratch (validation AAR project + rn package's
+# Android module both create these).
+android/.gradle/
+android/build/
+android/local.properties
+android/.kotlin/
+rn/android/.gradle/
+rn/android/build/
+rn/android/.kotlin/
+rn/android/local.properties
+
+# iOS build scratch (the committed xcframework + Sources/ live alongside,
+# but the build script's intermediates do not).
+apple/build/
+apple/.validation/
+apple/.build/
+apple/.swiftpm/
+
+# react-native-builder-bob output for the rn package — npm tarball ships
+# lib/ but it's regenerated from src/ via `npm run build`.
+rn/lib/
 
 # OS / editor cruft
 .DS_Store
